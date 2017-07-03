@@ -2,35 +2,58 @@
 
 The Terrific Bridge is used to manage Frontend UI components inside React. It can be used to register components, send and receive actions (bidirectional) and handle application starts & stops. Remember that the TerrificBridge is a singleton and can be instanciated once per Application.
 
-> Info: All examples are made with a simple slider implementation.
 
-###### Terrific Slider Implementation
 
-```js
-(function(T) {
-    T.Module.Slider = T.createModule({
-        start() {
-            $(this._ctx).slick();
-        },
-        stop() {
-            $(this._ctx).slick("unslick");
-        },
-        actions: {
-            update(force = false) {
-                $(this._ctx).slick('setPosition');
-            }
-        }
-    })
-})(window.T);
-```
+## TOC
+* [Package information](#package)
+    * [Dependencies]()
+    * [Contents of react-terrific-bridge](#contents)
+* [Installation guide](#installation)
+* [How to use](#registering-component)
+    * [Registering Component](#registering-component)
+    * [Registering Component with UI bindngs](#registering-component-with-receive-actions)
+    * [Send actions to the UI Component](#send-actions-to-the-ui-component)
+    * [Unregistering Component](#unregister-component)
+* [API Documentation](#react-api)
+    * [React](#react-api)
+    * [Terrific](#terrific-api)
 
 ## Package
 
 ```js
-import TerrificBridge, { TerrificBridgeGlobalAppId, getGlobalApp } from "react-terrific-bridge";
+import TerrificBridgeInstance, {
+    TerrificBridge,
+    TerrificBridgeGlobalAppId,
+    getGlobalApp
+} from "react-terrific-bridge";
+```
 
-// TerrificGlobalAppId => "reactTerrificAppInstance";
-// getGlobalApp() => Application { ... }
+### Dependencies
+* [react-dom@^15.1.0](https://www.npmjs.com/package/react-dom)
+* [react@^15.1.0](https://www.npmjs.com/package/react)
+
+### Contents
+
+#### TerrificBridgeInstance (default)
+Singleton instance which should be used to register any components inside the page.
+
+#### TerrificBridge
+The named export TerrificBridge is the class blueprint of the singleton. You can use it if you need multiple Terrific Applications.
+
+#### TerrificBridgeGlobalAppId
+Will be used to make the application available inside the window object if the debug mode is enabled. You can receive the application via te `getGlobalApp()` method.
+
+#### getGlobalApp
+Will return the global application instance if the debug mode was enabled before, otherwise it will return `undefined`;
+
+
+## Installation
+
+It is recommended to use **yarn** as package manager and to install `react-terrific-bridge` via yarn, allthough it would work with NPM.
+
+```bash
+yarn add react-terrific-bridge
+npm install --save react-terrific-bridge
 ```
 
 ## Registering Component
