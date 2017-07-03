@@ -46,6 +46,7 @@ declare module "react-terrific-bridge" {
 
         configure(config?: Object): void,
         load(config?: Object): void,
+        reset(): void,
         getComponentById(componentId: number): Object | null,
         registerComponent(component: Component<*, *, *>, compositeFactory?: TerrificBridgeFnFactory): Object | void,
         unregisterComponent(component: Component<*, *, *>): boolean,

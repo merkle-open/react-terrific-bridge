@@ -43,6 +43,7 @@ declare module "react-terrific-bridge" {
 
         configure(config?: Object): void;
         load(config?: Object): void;
+        reset(): void;
         getComponentById(componentId: number): Object | null;
         registerComponent(
             component: Component<any, any, any>,
