@@ -10,6 +10,7 @@ The Terrific Bridge is used to manage Frontend UI components inside React. It ca
     * [Contents of react-terrific-bridge](#contents)
 * [Installation guide](#installation)
 * [How to use](#registering-component)
+    * [Loading the TerrificBridge](#loading-the-terrificbridge)
     * [Registering Component](#registering-component)
     * [Registering Component with UI bindngs](#registering-component-with-receive-actions)
     * [Send actions to the UI Component](#send-actions-to-the-ui-component)
@@ -54,6 +55,30 @@ It is recommended to use **yarn** as package manager and to install `react-terri
 ```bash
 yarn add react-terrific-bridge
 npm install --save react-terrific-bridge
+```
+
+## Loading the TerrificBridge
+The most important thing in the bridge is the `load()` method, which will bootstrap the Terrific application on the react side.
+You must call this method at the root entry of your react app to make it possible to register all components. All components which 
+are registered before the load function was called will be automatically initialized during the `load()` call.
+
+```js
+import React, { Component } from "react";
+import ReactDOM from "react-dom";
+import TerrificBridge from "react-terrific-bridge";
+
+class App extends Component {
+    componentDidMount() {
+        // bootstrap terrific application ...
+        TerrificBridge.load();    
+    }
+
+    render() {
+        return <h1>Hello there!</h1>;
+    }
+}
+
+ReactDOM.render(<App />, document.getElementById("root"));
 ```
 
 ## Registering Component
@@ -235,6 +260,14 @@ TerrificBridge.load(settings: Object): void
 
 ##### 01 Settings
 A configuration set for the Bridge Singleton.
+
+### reset
+
+Resets the TerrificBridge state (queue, components, amm.) and must be re-loaded afterwards.
+
+```js
+TerrificBridge.reset(): void
+```
 
 ### registerComponent
 
