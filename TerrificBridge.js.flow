@@ -1,0 +1,56 @@
+declare module "react-terrific-bridge" {
+    declare class Component {
+        props: any,
+        state: any,
+        context: any,
+
+        static name: string,
+
+        constructor(props?: any, context?: any): any,
+
+        setState(partial: any, callback?: any): void,
+        forceUpdate(callback?: any): void
+    }
+
+    declare export type TerrificApp = {
+        _config: Object,
+        _ctx: Object,
+        _id: number,
+        _modules: Object,
+        _sandbox: Object,
+        start: Function,
+        getModuleById: Function,
+        registerModule: Function,
+        unregisterModules: Function
+    };
+
+    declare export type TerrificSandbox = {
+        _application: TerrificApp,
+        _eventEmitters: Array<Object>
+    };
+
+    declare export var TerrificBridgeGlobalAppId: string;
+
+    declare export type TerrificBridgeFnFactory = {
+        [action: string]: Function
+    };
+
+    declare export function getGlobalApp(): TerrificBridge | void;
+
+    declare export class TerrificBridge {
+        app: TerrificApp,
+        config: Object,
+        terrific: Object,
+
+        constructor(debug: Boolean): TerrificBridge,
+
+        configure(config?: Object): void,
+        load(config?: Object): void,
+        getComponentById(componentId: number): Object | null,
+        registerComponent(component: Component<*, *, *>, compositeFactory?: TerrificBridgeFnFactory): Object | void,
+        unregisterComponent(component: Component<*, *, *>): boolean,
+        action(component: Component<*, *, *>, action: string, ...args: any): boolean | void
+    }
+
+    declare export default TerrificBridge
+}
