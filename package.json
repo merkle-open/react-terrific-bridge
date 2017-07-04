@@ -1,13 +1,29 @@
 {
     "name": "react-terrific-bridge",
-    "version": "1.2.0",
+    "version": "1.2.1",
     "main": "TerrificBridge.js",
     "author": "Jan Biasi <biasijan@gmail.com>",
     "license": "MIT",
-    "description": "",
+    "description": "A utility belt for using TerrificJS together with React. Provides module registration and unregistration as well as an action API for event bindings, also supporting Flow and TypeScript.",
+    "keywords": [
+        "react",
+        "terrific",
+        "bridge",
+        "es6",
+        "react-dom",
+        "modules",
+        "connection",
+        "t",
+        "namics",
+        "brunschgi"
+    ],
     "repository": {
         "type": "git",
         "url": "https://github.com/namics/react-terrific-bridge"
+    },
+    "bugs": {
+        "url": "https://github.com/namics/react-terrific-bridge/issues",
+        "email": "opensource@namics.com"
     },
     "scripts": {
         "start": "npm-run-all --parallel start:dev lint:dev",
