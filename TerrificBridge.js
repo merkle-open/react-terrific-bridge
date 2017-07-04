@@ -25,13 +25,13 @@ export const TerrificBridgeGlobalAppId = "reactTerrificBridgeApp";
  * @type {Object}
  */
 const messages = {
-    init: "Initialized new TerrificBridge instance",
     bootstrapQueueError: "Bootstrapping terrific application failed: %s",
     tryRegister: "Registering tModule %s%s on node",
     tryUnregister: "Unregistering terrific component #%s",
     unregisterSuccess: "Succesfully unregistered component #%s",
     unregisterFailed: "Unregistering component #%s failed: %s",
     sendAction: "Send action %s to component %s#%d",
+    trySendFromTerrific: "React is receiving action '%s' from terrific",
     receiveActionFailed: "TerrificBridge failed receiving action %s: %s",
     getComponentFailed: "No Component found with id #%d"
 };
@@ -71,13 +71,10 @@ export class TerrificBridge {
         this._t = window.T;
         this._config.debug = debug ? true : false;
         this._queue = {
+            update: [],
             register: [],
             unregister: []
         };
-
-        if (this._config.debug) {
-            console.log(messages.init);
-        }
 
         return TerrificBridgeInstance;
     }
@@ -157,6 +154,7 @@ export class TerrificBridge {
         this._app = void 0;
         this._processed = false;
         this._queue = {
+            update: [],
             register: [],
             unregister: []
         };
@@ -226,6 +224,9 @@ export class TerrificBridge {
                  */
                 tModule.send = (selector, args = []) => {
                     const fn = compositeFactory[selector];
+                    if (bridge._config.debug) {
+                        console.log(messages.trySendFromTerrific, selector);
+                    }
 
                     if (typeof fn === "function") {
                         try {

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { shallow, mount } from "enzyme";
 import sinon from "sinon";
+import $ from "jquery";
 
 import App from "./spec/react/App";
 
@@ -104,10 +105,103 @@ describe("TerrificBridge", () => {
                 expect(mountedComponenet).toHaveLength(1);
                 expect(uiStartStub.called).toEqual(true);
             });
-            it.skip("should provide bidirectional communication for react & terrific", () => {});
+            it("should unregister terrific components successfully", () => {
+                TerrificBridge.reset();
+                TerrificBridge.configure({ debug: true });
+
+                const uiStopStub = sinon.spy();
+
+                T.Module.CanRegister = T.createModule({
+                    start(resolve) {
+                        resolve();
+                    },
+                    stop() {
+                        uiStopStub();
+                        this._events.disconnect();
+                    }
+                });
+
+                class CanRegister extends Component {
+                    componentDidMount() {
+                        TerrificBridge.registerComponent(this);
+                    }
+
+                    componentWillUnmount() {
+                        TerrificBridge.unregisterComponent(this);
+                    }
+
+                    render() {
+                        return <div id="component" data-t-name="CanRegister" />;
+                    }
+                }
+
+                const tree = mount(<CanRegister />);
+                TerrificBridge.load();
+                tree.unmount();
+
+                expect(uiStopStub.callCount).toEqual(1);
+            });
         });
 
-        describe("unregistration", () => {});
+        describe("communication", () => {
+            it("should provide bidirectional communication for react & terrific", () => {
+                TerrificBridge.reset();
+                TerrificBridge.configure({ debug: true });
+
+                const reactConnectionHandler = sinon.spy();
+                const terrificConnectionHandler = sinon.spy();
+
+                T.Module.CanRegister = T.createModule({
+                    actions: {
+                        terrificConnectionHandler
+                    },
+                    start(resolve) {
+                        this.send("reactConnectionHandler", 10);
+                        resolve();
+                    }
+                });
+
+                class CanRegister extends Component {
+                    componentDidMount() {
+                        TerrificBridge.registerComponent(this, {
+                            reactConnectionHandler
+                        });
+
+                        TerrificBridge.action(this, "terrificConnectionHandler");
+                    }
+
+                    render() {
+                        return (
+                            <div id="component" data-t-name="CanRegister">
+                                <button className="bound-click">Click me</button>
+                            </div>
+                        );
+                    }
+                }
+
+                const mountApplication = () => {
+                    return mount(
+                        <App>
+                            <CanRegister />
+                        </App>
+                    );
+                };
+
+                expect(mountApplication).not.toThrow();
+
+                const tree = mountApplication();
+                const mountedComponenet = tree.find("#component");
+                const mountedButtonTrigger = tree.find(".bound-click");
+
+                expect(mountedComponenet).toHaveLength(1);
+                expect(mountedButtonTrigger).toHaveLength(1);
+
+                mountedButtonTrigger.simulate("click");
+
+                expect(reactConnectionHandler.callCount).toEqual(2);
+                expect(terrificConnectionHandler.callCount).toEqual(1);
+            });
+        });
     });
 });
 
