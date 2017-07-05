@@ -21,22 +21,6 @@ const NODE_ENV = process.env.NODE_ENV || "";
 export const TerrificBridgeGlobalAppId = "reactTerrificBridgeApp";
 
 /**
- * Debugging messages
- * @type {Object}
- */
-const messages = {
-    bootstrapQueueError: "Bootstrapping terrific application failed: %s",
-    tryRegister: "Registering tModule %s%s on node",
-    tryUnregister: "Unregistering terrific component #%s",
-    unregisterSuccess: "Succesfully unregistered component #%s",
-    unregisterFailed: "Unregistering component #%s failed: %s",
-    sendAction: "Send action %s to component %s#%d",
-    trySendFromTerrific: "React is receiving action '%s' from terrific",
-    receiveActionFailed: "TerrificBridge failed receiving action %s: %s",
-    getComponentFailed: "No Component found with id #%d"
-};
-
-/**
  * Get the global react terrific bridge instance
  * @return {TerrificBridge|void}
  */
@@ -133,8 +117,7 @@ export class TerrificBridge {
             this._queue.register.forEach(fn => fn());
             this._queue.unregister.forEach(fn => fn());
         } catch (e) {
-            console.error(messages.bootstrapQueueError, e.message || e || "Unknown Error");
-            return void 0;
+            throw new Error(`Bootstrapping terrific application failed: ${e.message || e || "Unknown Error"}`);
         }
 
         this._processed = true;
@@ -175,7 +158,6 @@ export class TerrificBridge {
         try {
             return this._app.getModuleById(id);
         } catch (err) {
-            console.warn(messages.getComponentFailed, id);
             return void 0;
         }
     }
@@ -209,7 +191,7 @@ export class TerrificBridge {
             const tModule = this._app.registerModule(node, name, decorator);
 
             if (bridge._config.debug) {
-                console.log(messages.tryRegister, name, decorator ? `#${decorator[0]}` : "", node);
+                console.log("Registering tModule %s%s on node", name, decorator ? `#${decorator[0]}` : "", node);
             }
 
             if (tModule) {
@@ -225,14 +207,14 @@ export class TerrificBridge {
                 tModule.send = (selector, args = []) => {
                     const fn = compositeFactory[selector];
                     if (bridge._config.debug) {
-                        console.log(messages.trySendFromTerrific, selector);
+                        console.log("React is receiving action '%s' from terrific", selector);
                     }
 
                     if (typeof fn === "function") {
                         try {
                             fn.apply(bridge, [...args]);
                         } catch (err) {
-                            console.console.error(messages.receiveActionFailed, selector, err.message);
+                            throw new Error(`TerrificBridge failed receiving action ${selector}: ${err.message}`);
                         }
                     }
                 };
@@ -256,11 +238,16 @@ export class TerrificBridge {
 
         const unregister = () => {
             const node = ReactDOM.findDOMNode(component);
+
+            if (!node) {
+                return void 0;
+            }
+
             const id = node.getAttribute("data-t-id");
             const tModule = this._app.getModuleById(id);
 
             if (bridge._config.debug) {
-                console.log(messages.tryUnregister, id);
+                console.log("Unregistering terrific component #%s", id);
             }
 
             try {
@@ -269,15 +256,14 @@ export class TerrificBridge {
 
                 this._app.unregisterModules([id]);
                 node.removeAttribute("data-t-id");
-                console.log(messages.unregisterSuccess, id);
+
+                if (bridge._config.debug) {
+                    console.log("Succesfully unregistered component #%s", id);
+                }
 
                 return true;
             } catch (err) {
-                if (bridge._config.debug) {
-                    console.error(messages.unregisterFailed, id, err.message);
-                }
-
-                return false;
+                throw new Error(`Unregistering component #${id} failed: ${err.message}`);
             }
         };
 
@@ -310,7 +296,7 @@ export class TerrificBridge {
                 const tModule = this._app.getModuleById(id);
 
                 if (bridge._config.debug) {
-                    console.log(messages.sendAction, action, name, id);
+                    console.log("Send action %s to component %s#%d", action, name, id);
                 }
 
                 if (tModule && tModule.actions) {
