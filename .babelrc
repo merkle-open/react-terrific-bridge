@@ -1,4 +1,26 @@
 {
-    "presets": ["es2015", "react"],
-    "plugins": ["transform-class-properties"]
+    "presets": ["babel-preset-es2015", "react"],
+    "plugins": [
+		["transform-replace-object-assign", "simple-assign"],
+		"transform-class-properties",
+		"transform-dev-warning"
+	],
+	"env": {
+    "test": {
+      "sourceMaps": "both"
+    },
+    "docs-production": {
+      "plugins": [
+        ["transform-replace-object-assign", "simple-assign"],
+		"transform-class-properties",
+        "transform-react-constant-elements",
+        "transform-react-inline-elements"
+      ]
+    },
+    "release": {
+      "plugins": [
+        "transform-runtime"
+      ]
+    }
+  }
 }

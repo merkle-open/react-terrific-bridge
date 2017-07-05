@@ -1,0 +1,11 @@
+node_modules
+.vscode
+*.log
+spec
+.babelrc
+.eslintingore
+.gitignore
+.nvmrc
+TerrificBridge.spec.js
+webpack.config.js
+yarn.lock
