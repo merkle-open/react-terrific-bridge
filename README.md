@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/namics/react-terrific-bridge.svg?branch=master)](https://travis-ci.org/namics/react-terrific-bridge) [![Coverage Status](https://coveralls.io/repos/github/namics/react-terrific-bridge/badge.svg?branch=master)](https://coveralls.io/github/namics/react-terrific-bridge?branch=master)
+
 # TerrificBridge
 
 The Terrific Bridge is used to manage Frontend UI components inside React. It can be used to register components, send and receive actions (bidirectional) and handle application starts & stops. Remember that the TerrificBridge is a singleton and can be instanciated once per Application.
