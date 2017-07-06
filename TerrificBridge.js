@@ -1,5 +1,4 @@
 import ReactDOM from "react-dom";
-import T from "terrific";
 
 /**
  * Singleton container
@@ -110,8 +109,14 @@ export class TerrificBridge {
      * @param  {Object} [config]        Optional configuration
      */
     load(config = {}) {
+        if (!window.T || !window.T.Application) {
+            throw new Error(
+                "Terrific is not available in your environemen, make sure that the terrific.js is loaded before your React Application."
+            );
+        }
+
         this.configure(config);
-        this._app = window.T ? new window.T.Application() : new T.Application();
+        this._app = new window.T.Application();
 
         try {
             this._queue.register.forEach(fn => fn());
