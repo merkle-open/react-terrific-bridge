@@ -83,7 +83,7 @@ export class TerrificBridge {
      * @return {Object}
      */
     get terrific() {
-        return this._t;
+        return this._t || window.T || void 0;
     }
 
     /**
@@ -183,7 +183,7 @@ export class TerrificBridge {
             if (!node) {
                 // No valid node was found or React component
                 // was not rendered before.
-                return {};
+                return void 0;
             }
 
             const name = node.getAttribute("data-t-name");
@@ -191,7 +191,7 @@ export class TerrificBridge {
             const decorator = typeof decoratorAnnotation === "string" ? [decoratorAnnotation] : void 0;
 
             if (node.getAttribute("data-t-id")) {
-                return {};
+                return void 0;
             }
 
             const tModule = this._app.registerModule(node, name, decorator);

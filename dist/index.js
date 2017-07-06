@@ -130,7 +130,7 @@ var TerrificBridge = function () {
             var config = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
             if (!window.T || !window.T.Application) {
-                throw new Error("Terrific is not available in your environemen, make sure that the terrific.js is loaded before your React Application.");
+                throw new Error("Terrific is not available in your environement, make sure " + "that the terrific.js is loaded before your React Application.");
             }
 
             this.configure(config);
@@ -217,7 +217,7 @@ var TerrificBridge = function () {
                 if (!node) {
                     // No valid node was found or React component
                     // was not rendered before.
-                    return {};
+                    return void 0;
                 }
 
                 var name = node.getAttribute("data-t-name");
@@ -225,7 +225,7 @@ var TerrificBridge = function () {
                 var decorator = typeof decoratorAnnotation === "string" ? [decoratorAnnotation] : void 0;
 
                 if (node.getAttribute("data-t-id")) {
-                    return {};
+                    return void 0;
                 }
 
                 var tModule = _this._app.registerModule(node, name, decorator);
