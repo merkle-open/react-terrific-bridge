@@ -111,7 +111,8 @@ export class TerrificBridge {
     load(config = {}) {
         if (!window.T || !window.T.Application) {
             throw new Error(
-                "Terrific is not available in your environemen, make sure that the terrific.js is loaded before your React Application."
+                `Terrific is not available in your environement, make sure ` +
+                    `that the terrific.js is loaded before your React Application.`
             );
         }
 

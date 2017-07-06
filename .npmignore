@@ -1,11 +1,14 @@
 node_modules
 .vscode
+coverage
 *.log
 spec
 .babelrc
 .eslintingore
 .gitignore
 .nvmrc
+.travis.yml
+.coveralls.yml
 TerrificBridge.spec.js
 webpack.config.js
 yarn.lock

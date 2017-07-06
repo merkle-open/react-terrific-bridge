@@ -1,11 +1,18 @@
 import React, { Component } from "react";
 import { shallow, mount } from "enzyme";
 import sinon from "sinon";
-import $ from "jquery";
 
+// Frontend testing dependencies
+import $ from "jquery";
+import T from "terrific";
+
+// Fake globals
+window.T = T;
+window.$ = $;
+
+// Testing instances
 import App from "./spec/react/App";
 
-import T from "terrific";
 import TerrificBridge, {
     TerrificBridge as TerrificBridgeBlueprint,
     TerrificBridgeGlobalAppId,

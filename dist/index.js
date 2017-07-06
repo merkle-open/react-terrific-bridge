@@ -21,10 +21,6 @@ var _reactDom = require("react-dom");
 
 var _reactDom2 = _interopRequireDefault(_reactDom);
 
-var _terrific = require("terrific");
-
-var _terrific2 = _interopRequireDefault(_terrific);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
@@ -45,22 +41,6 @@ var NODE_ENV = process.env.NODE_ENV || "";
  * @type {string}
  */
 var TerrificBridgeGlobalAppId = exports.TerrificBridgeGlobalAppId = "reactTerrificBridgeApp";
-
-/**
- * Debugging messages
- * @type {Object}
- */
-var messages = {
-    bootstrapQueueError: "Bootstrapping terrific application failed: %s",
-    tryRegister: "Registering tModule %s%s on node",
-    tryUnregister: "Unregistering terrific component #%s",
-    unregisterSuccess: "Succesfully unregistered component #%s",
-    unregisterFailed: "Unregistering component #%s failed: %s",
-    sendAction: "Send action %s to component %s#%d",
-    trySendFromTerrific: "React is receiving action '%s' from terrific",
-    receiveActionFailed: "TerrificBridge failed receiving action %s: %s",
-    getComponentFailed: "No Component found with id #%d"
-};
 
 /**
  * Get the global react terrific bridge instance
@@ -149,8 +129,12 @@ var TerrificBridge = function () {
         value: function load() {
             var config = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
+            if (!window.T || !window.T.Application) {
+                throw new Error("Terrific is not available in your environemen, make sure that the terrific.js is loaded before your React Application.");
+            }
+
             this.configure(config);
-            this._app = window.T ? new window.T.Application() : new _terrific2.default.Application();
+            this._app = new window.T.Application();
 
             try {
                 this._queue.register.forEach(function (fn) {
@@ -160,8 +144,7 @@ var TerrificBridge = function () {
                     return fn();
                 });
             } catch (e) {
-                console.error(messages.bootstrapQueueError, e.message || e || "Unknown Error");
-                return void 0;
+                throw new Error("Bootstrapping terrific application failed: " + (e.message || e || "Unknown Error"));
             }
 
             this._processed = true;
@@ -208,7 +191,6 @@ var TerrificBridge = function () {
             try {
                 return this._app.getModuleById(id);
             } catch (err) {
-                console.warn(messages.getComponentFailed, id);
                 return void 0;
             }
         }
@@ -249,7 +231,7 @@ var TerrificBridge = function () {
                 var tModule = _this._app.registerModule(node, name, decorator);
 
                 if (bridge._config.debug) {
-                    console.log(messages.tryRegister, name, decorator ? "#" + decorator[0] : "", node);
+                    console.log("Registering tModule %s%s on node", name, decorator ? "#" + decorator[0] : "", node);
                 }
 
                 if (tModule) {
@@ -267,14 +249,14 @@ var TerrificBridge = function () {
 
                         var fn = compositeFactory[selector];
                         if (bridge._config.debug) {
-                            console.log(messages.trySendFromTerrific, selector);
+                            console.log("React is receiving action '%s' from terrific", selector);
                         }
 
                         if (typeof fn === "function") {
                             try {
                                 fn.apply(bridge, [].concat((0, _toConsumableArray3.default)(args)));
                             } catch (err) {
-                                console.console.error(messages.receiveActionFailed, selector, err.message);
+                                throw new Error("TerrificBridge failed receiving action " + selector + ": " + err.message);
                             }
                         }
                     };
@@ -303,11 +285,16 @@ var TerrificBridge = function () {
 
             var unregister = function unregister() {
                 var node = _reactDom2.default.findDOMNode(component);
+
+                if (!node) {
+                    return void 0;
+                }
+
                 var id = node.getAttribute("data-t-id");
                 var tModule = _this2._app.getModuleById(id);
 
                 if (bridge._config.debug) {
-                    console.log(messages.tryUnregister, id);
+                    console.log("Unregistering terrific component #%s", id);
                 }
 
                 try {
@@ -316,15 +303,14 @@ var TerrificBridge = function () {
 
                     _this2._app.unregisterModules([id]);
                     node.removeAttribute("data-t-id");
-                    console.log(messages.unregisterSuccess, id);
+
+                    if (bridge._config.debug) {
+                        console.log("Succesfully unregistered component #%s", id);
+                    }
 
                     return true;
                 } catch (err) {
-                    if (bridge._config.debug) {
-                        console.error(messages.unregisterFailed, id, err.message);
-                    }
-
-                    return false;
+                    throw new Error("Unregistering component #" + id + " failed: " + err.message);
                 }
             };
 
@@ -368,7 +354,7 @@ var TerrificBridge = function () {
                     var tModule = _this3._app.getModuleById(id);
 
                     if (bridge._config.debug) {
-                        console.log(messages.sendAction, _action, name, id);
+                        console.log("Send action %s to component %s#%d", _action, name, id);
                     }
 
                     if (tModule && tModule.actions) {
@@ -416,7 +402,7 @@ var TerrificBridge = function () {
 }();
 
 /**
- * The TerrificBridgeInstance is a singleton and
+ * The TerrificBridgeInstance is a singleton and 
  * will be instanciated here.
  */
 
