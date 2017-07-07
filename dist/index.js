@@ -291,6 +291,9 @@ var TerrificBridge = function () {
                 }
 
                 var id = node.getAttribute("data-t-id");
+                if (!id || id === null) {
+                    return void 0;
+                }
                 var tModule = _this2._app.getModuleById(id);
 
                 if (bridge._config.debug) {
@@ -395,14 +398,14 @@ var TerrificBridge = function () {
     }, {
         key: "terrific",
         get: function get() {
-            return this._t;
+            return this._t || window.T || void 0;
         }
     }]);
     return TerrificBridge;
 }();
 
 /**
- * The TerrificBridgeInstance is a singleton and 
+ * The TerrificBridgeInstance is a singleton and
  * will be instanciated here.
  */
 

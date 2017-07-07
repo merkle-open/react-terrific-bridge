@@ -250,6 +250,9 @@ export class TerrificBridge {
             }
 
             const id = node.getAttribute("data-t-id");
+            if (!id || id === null) {
+                return void 0;
+            }
             const tModule = this._app.getModuleById(id);
 
             if (bridge._config.debug) {
@@ -321,7 +324,7 @@ export class TerrificBridge {
 }
 
 /**
- * The TerrificBridgeInstance is a singleton and 
+ * The TerrificBridgeInstance is a singleton and
  * will be instanciated here.
  */
 TerrificBridgeInstance = new TerrificBridge(!(NODE_ENV === "production"));

@@ -51,6 +51,39 @@ describe("TerrificBridge", () => {
         });
     });
 
+    it("should unregister unregistered terrific component", () => {
+        TerrificBridge.reset();
+        TerrificBridge.configure({ debug: true });
+
+        const uiStopStub = sinon.spy();
+
+        T.Module.CanRegister = T.createModule({
+            start(resolve) {
+                resolve();
+            },
+            stop() {
+                uiStopStub();
+                this._events.disconnect();
+            }
+        });
+
+        class CanRegister extends Component {
+            componentWillUnmount() {
+                TerrificBridge.unregisterComponent(this);
+            }
+
+            render() {
+                return <div id="component" data-t-name="CanRegister" />;
+            }
+        }
+
+        const tree = mount(<CanRegister />);
+        TerrificBridge.load();
+        tree.unmount();
+
+        expect(uiStopStub.callCount).toEqual(0);
+    });
+
     describe("components", () => {
         describe("registration", () => {
             it("should mount components successfully", () => {
@@ -245,6 +278,7 @@ describe("TerrificBridge", () => {
 
                 expect(uiStopStub.callCount).toEqual(1);
             });
+
             it("should log unregistration errors from terrific components", () => {
                 TerrificBridge.reset();
                 TerrificBridge.configure({ debug: true });
