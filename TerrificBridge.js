@@ -27,6 +27,19 @@ export const getGlobalApp = () => {
     return window[TerrificBridgeGlobalAppId];
 };
 
+// Simple non-operative method
+const noop = () => {};
+
+/**
+ * Get a proxy console instance
+ * @param {boolean} [false] debug 
+ */
+const getProxyConsole = (debug = false) => ({
+    log: debug ? noop : global.console.log.bind(global) || noop,
+    group: debug ? noop : global.console.groupCollapsed.bind(global) || noop,
+    groupEnd: debug ? noop : global.console.groupEnd.bind(global) || noop
+});
+
 /**
  * Terrific application handler for React
  * @uses Terrific
@@ -40,6 +53,7 @@ export class TerrificBridge {
     _app = void 0;
     _processed = false;
     _t = void 0;
+    _proxyConsole = getProxyConsole();
 
     /**
      * Instanciates the Bridge
@@ -59,7 +73,15 @@ export class TerrificBridge {
             unregister: []
         };
 
+        if (this._config.debug) {
+            this._proxyConsole = getProxyConsole(true);
+        }
+
         return TerrificBridgeInstance;
+    }
+
+    get logger() {
+        return this._proxyConsole;
     }
 
     /**
@@ -194,11 +216,9 @@ export class TerrificBridge {
                 return void 0;
             }
 
+            this.logger.group(`Register ${name}`);
             const tModule = this._app.registerModule(node, name, decorator);
-
-            if (bridge._config.debug) {
-                console.log("Registering tModule %s%s on node", name, decorator ? `#${decorator[0]}` : "", node);
-            }
+            this.logger.log("Registering Module %s%s on node", name, decorator ? `#${decorator[0]}` : "", node);
 
             if (tModule) {
                 tModule._bridge = bridge;
@@ -212,13 +232,12 @@ export class TerrificBridge {
                  */
                 tModule.send = (selector, args = []) => {
                     const fn = compositeFactory[selector];
-                    if (bridge._config.debug) {
-                        console.log("React is receiving action '%s' from terrific", selector);
-                    }
+                    this.logger.log("React is receiving action '%s' from terrific", selector);
 
                     if (typeof fn === "function") {
                         try {
                             fn.apply(bridge, [...args]);
+                            this.logger.log("Successfully registered component");
                         } catch (err) {
                             throw new Error(`TerrificBridge failed receiving action ${selector}: ${err.message}`);
                         }
@@ -228,6 +247,7 @@ export class TerrificBridge {
                 this._app.start([tModule]);
             }
 
+            this.logger.groupEnd(`Register ${name}`);
             return tModule;
         };
 
@@ -250,14 +270,15 @@ export class TerrificBridge {
             }
 
             const id = node.getAttribute("data-t-id");
+            const name = node.getAttribute("data-t-name");
+
             if (!id || id === null) {
                 return void 0;
             }
-            const tModule = this._app.getModuleById(id);
 
-            if (bridge._config.debug) {
-                console.log("Unregistering terrific component #%s", id);
-            }
+            const tModule = this._app.getModuleById(id);
+            this.logger.group(`Unregister ${name}#${id}`);
+            this.logger.log("Unregistering terrific component #%s", id);
 
             try {
                 tModule.stop.apply(tModule);
@@ -265,10 +286,7 @@ export class TerrificBridge {
 
                 this._app.unregisterModules([id]);
                 node.removeAttribute("data-t-id");
-
-                if (bridge._config.debug) {
-                    console.log("Succesfully unregistered component #%s", id);
-                }
+                this.logger.log("Succesfully unregistered component #%s", id);
 
                 return true;
             } catch (err) {
@@ -293,6 +311,7 @@ export class TerrificBridge {
             const node = ReactDOM.findDOMNode(component);
             const name = node.getAttribute("data-t-name");
             const id = parseInt(node.getAttribute("data-t-id"), 10);
+            let updateSucceeded = false;
 
             action = action.replace(/\./g, "-");
             action = action.replace(/\//g, "-");
@@ -302,21 +321,28 @@ export class TerrificBridge {
             }
 
             if (node && name && id > 0) {
+                this.logger.group(`Send action ${action} to ${name}`);
                 const tModule = this._app.getModuleById(id);
-
-                if (bridge._config.debug) {
-                    console.log("Send action %s to component %s#%d", action, name, id);
-                }
+                this.logger.log(`Send action ${action} to component ${name}#${id}`);
 
                 if (tModule && tModule.actions) {
                     if (typeof tModule.actions[action] === "function") {
                         tModule.actions[action].apply(tModule, [...args, component]);
-                        return true;
+                        updateSucceeded = true;
                     }
                 }
+            } else {
+                this.logger.log(`Cannot send action to invalid component, Name or ID missing`);
             }
 
-            return false;
+            if (!updateSucceeded) {
+                this.logger.log(
+                    `Action was not triggered successfully, maybe the action was not registered on <T>${name}`
+                );
+            }
+
+            this.logger.groupEnd(`Send action ${action} to ${name}`);
+            return updateSucceeded;
         };
 
         return this._app ? update() : this._queue.update.push(update);

@@ -1,6 +1,6 @@
 {
     "name": "react-terrific-bridge",
-    "version": "1.2.7",
+    "version": "1.2.8-beta.1",
     "main": "dist/index.js",
     "author": "Jan Biasi <biasijan@gmail.com>",
     "contributors": [
@@ -85,8 +85,8 @@
         "webpack-dev-server": "~2.5.0"
     },
     "peerDependencies": {
-        "react": "^15.5.0",
-        "react-dom": "^15.5.0",
+        "react": ">=15.5.0",
+        "react-dom": ">=15.5.0",
         "terrific": "~3.0.0"
     },
     "jest": {
