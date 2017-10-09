@@ -215,6 +215,11 @@ var TerrificBridge = function () {
 
             var bridge = this;
 
+            if (!component) {
+                // No component found, skipping registration
+                return void 0;
+            }
+
             var register = function register() {
                 var node = _reactDom2.default.findDOMNode(component);
 
@@ -228,7 +233,7 @@ var TerrificBridge = function () {
                 var decoratorAnnotation = node.getAttribute('data-t-decorator');
                 var decorator = typeof decoratorAnnotation === 'string' ? [decoratorAnnotation] : void 0;
 
-                if (node.getAttribute('data-t-id')) {
+                if (!name || node.getAttribute('data-t-id')) {
                     return void 0;
                 }
 
@@ -294,10 +299,10 @@ var TerrificBridge = function () {
 
 
             if (!component) {
-                throw new Error('Cannoot reboot undefined component (type %s)', typeof component === 'undefined' ? 'undefined' : (0, _typeof3.default)(component));
+                throw new Error('Cannoot reboot undefined component (type ' + (typeof component === 'undefined' ? 'undefined' : (0, _typeof3.default)(component)) + ')');
             }
 
-            if (component && bridge._config.debug) {
+            if (component && this._config.debug) {
                 console.log('Rebooting component %s with factory', component, compositeFactory);
             }
 

@@ -151,7 +151,7 @@ describe('TerrificBridge', () => {
                 const mountedComponenet = tree.find('#component');
 
                 expect(mountedComponenet).toHaveLength(1);
-                expect(registeredFeuComponent.component).toBeFalsy();
+                expect(registeredFeuComponent).toBeFalsy();
             });
             it('should register terrific components successfully', () => {
                 TerrificBridge.reset();
@@ -316,6 +316,59 @@ describe('TerrificBridge', () => {
 
                 expect(shouldUnmount).toThrow('Stop');
             });
+        });
+
+        it('should reboot terrific components successfully', () => {
+            TerrificBridge.reset();
+            TerrificBridge.configure({ debug: true });
+
+            let registeredFeuComponent = void 0;
+
+            T.Module.CanRegister = T.createModule({
+                start(resolve) {
+                    resolve();
+                },
+                stop() {
+                    this._events.disconnect();
+                },
+            });
+
+            class CanRegister extends Component {
+                componentDidMount() {
+                    registeredFeuComponent = TerrificBridge.registerComponent(this, {
+                        testMethod: () => 'test',
+                    });
+
+                    TerrificBridge.rebootComponent(registeredFeuComponent);
+                }
+
+                render() {
+                    return <div id="component" data-t-name="CanRegister" />;
+                }
+            }
+
+            const mountApplication = () => {
+                return mount(
+                    <App>
+                        <CanRegister />
+                    </App>
+                );
+            };
+
+            expect(mountApplication).not.toThrow();
+
+            const tree = mountApplication();
+            const mountedComponenet = tree.find('#component');
+
+            expect(mountedComponenet).toHaveLength(1);
+            expect(registeredFeuComponent.component).toBeTruthy();
+            expect(typeof registeredFeuComponent.compositeFactory.testMethod).toEqual('function');
+            /*
+            expect(registeredFeuComponent._ctx).toBeTruthy();
+            expect(registeredFeuComponent._sandbox).toBeTruthy();
+            expect(registeredFeuComponent.actions).toBeTruthy();
+            expect(registeredFeuComponent.send).toBeTruthy();
+            */
         });
 
         describe('get', () => {

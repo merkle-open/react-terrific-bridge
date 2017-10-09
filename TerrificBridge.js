@@ -255,7 +255,7 @@ export class TerrificBridge {
             throw new Error(`Cannoot reboot undefined component (type ${typeof component})`);
         }
 
-        if (component && bridge._config.debug) {
+        if (component && this._config.debug) {
             console.log('Rebooting component %s with factory', component, compositeFactory);
         }
 
