@@ -110,7 +110,7 @@ export class TerrificBridge {
      */
     load(config = {}) {
         if (!window.T || !window.T.Application) {
-            throw new Error(
+            console.error(
                 `Terrific is not available in your environement, make sure ` +
                     `that the terrific.js is loaded before your React Application.`
             );
@@ -123,7 +123,7 @@ export class TerrificBridge {
             this._queue.register.forEach(fn => fn());
             this._queue.unregister.forEach(fn => fn());
         } catch (e) {
-            throw new Error(`Bootstrapping terrific application failed: ${e.message || e || "Unknown Error"}`);
+            console.error(`Bootstrapping terrific application failed: ${e.message || e || "Unknown Error"}`);
         }
 
         this._processed = true;
@@ -220,7 +220,7 @@ export class TerrificBridge {
                         try {
                             fn.apply(bridge, [...args]);
                         } catch (err) {
-                            throw new Error(`TerrificBridge failed receiving action ${selector}: ${err.message}`);
+                            console.error(`TerrificBridge failed receiving action ${selector}: ${err.message}`);
                         }
                     }
                 };
@@ -272,7 +272,7 @@ export class TerrificBridge {
 
                 return true;
             } catch (err) {
-                throw new Error(`Unregistering component #${id} failed: ${err.message}`);
+                console.error(`Unregistering component #${id} failed: ${err.message}`);
             }
         };
 

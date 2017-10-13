@@ -130,7 +130,7 @@ var TerrificBridge = function () {
             var config = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
             if (!window.T || !window.T.Application) {
-                throw new Error("Terrific is not available in your environement, make sure " + "that the terrific.js is loaded before your React Application.");
+                console.error("Terrific is not available in your environement, make sure " + "that the terrific.js is loaded before your React Application.");
             }
 
             this.configure(config);
@@ -144,7 +144,7 @@ var TerrificBridge = function () {
                     return fn();
                 });
             } catch (e) {
-                throw new Error("Bootstrapping terrific application failed: " + (e.message || e || "Unknown Error"));
+                console.error("Bootstrapping terrific application failed: " + (e.message || e || "Unknown Error"));
             }
 
             this._processed = true;
@@ -256,7 +256,7 @@ var TerrificBridge = function () {
                             try {
                                 fn.apply(bridge, [].concat((0, _toConsumableArray3.default)(args)));
                             } catch (err) {
-                                throw new Error("TerrificBridge failed receiving action " + selector + ": " + err.message);
+                                console.error("TerrificBridge failed receiving action " + selector + ": " + err.message);
                             }
                         }
                     };
@@ -313,7 +313,7 @@ var TerrificBridge = function () {
 
                     return true;
                 } catch (err) {
-                    throw new Error("Unregistering component #" + id + " failed: " + err.message);
+                    console.error("Unregistering component #" + id + " failed: " + err.message);
                 }
             };
 
