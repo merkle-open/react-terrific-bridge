@@ -122,7 +122,7 @@ export class TerrificBridge {
      */
     load(config = {}) {
         if (!window.T || !window.T.Application) {
-            throw new Error(
+            console.error(
                 `Terrific is not available in your environement, make sure ` +
                     `that the terrific.js is loaded before your React Application.`
             );
@@ -190,6 +190,10 @@ export class TerrificBridge {
         const bridge = this;
 
         const register = () => {
+            if (!component) {
+                return void 0;
+            }
+
             const node = ReactDOM.findDOMNode(component);
 
             if (!node) {
@@ -232,7 +236,7 @@ export class TerrificBridge {
                         try {
                             fn.apply(bridge, [...args]);
                         } catch (err) {
-                            throw new Error(`TerrificBridge failed receiving action ${selector}: ${err.message}`);
+                            console.error(`TerrificBridge failed receiving action ${selector}: ${err.message}`);
                         }
                     }
                 };
@@ -255,6 +259,10 @@ export class TerrificBridge {
         const bridge = this;
 
         const unregister = () => {
+            if (!component) {
+                return void 0;
+            }
+
             const node = ReactDOM.findDOMNode(component);
 
             if (!node) {
@@ -284,7 +292,7 @@ export class TerrificBridge {
 
                 return true;
             } catch (err) {
-                throw new Error(`Unregistering component #${id} failed: ${err.message}`);
+                console.error(`Unregistering component #${id} failed: ${err.message}`);
             }
         };
 
