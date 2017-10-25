@@ -1,23 +1,23 @@
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
 exports.TerrificBridge = exports.getGlobalApp = exports.TerrificBridgeGlobalAppId = undefined;
 
-var _toConsumableArray2 = require("babel-runtime/helpers/toConsumableArray");
+var _toConsumableArray2 = require('babel-runtime/helpers/toConsumableArray');
 
 var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
 
-var _classCallCheck2 = require("babel-runtime/helpers/classCallCheck");
+var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = require("babel-runtime/helpers/createClass");
+var _createClass2 = require('babel-runtime/helpers/createClass');
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
-var _reactDom = require("react-dom");
+var _reactDom = require('react-dom');
 
 var _reactDom2 = _interopRequireDefault(_reactDom);
 
@@ -33,14 +33,14 @@ var TerrificBridgeInstance = null;
  * Safe version to use NODE_ENV variable
  * @type {string}
  */
-var NODE_ENV = process.env.NODE_ENV || "";
+var NODE_ENV = process.env.NODE_ENV || '';
 
 /**
  * The global id for the terrific bridge instance
  * @readonly
  * @type {string}
  */
-var TerrificBridgeGlobalAppId = exports.TerrificBridgeGlobalAppId = "reactTerrificBridgeApp";
+var TerrificBridgeGlobalAppId = exports.TerrificBridgeGlobalAppId = 'reactTerrificBridgeApp';
 
 /**
  * Get the global react terrific bridge instance
@@ -96,7 +96,7 @@ var TerrificBridge = function () {
 
 
     (0, _createClass3.default)(TerrificBridge, [{
-        key: "configure",
+        key: 'configure',
 
 
         /**
@@ -112,7 +112,7 @@ var TerrificBridge = function () {
                 if (config.hasOwnProperty(key)) {
                     self._config[key] = config[key];
 
-                    if (key === "debug" && config[key]) {
+                    if (key === 'debug' && config[key]) {
                         window[TerrificBridgeGlobalAppId] = self.app;
                     }
                 }
@@ -125,12 +125,12 @@ var TerrificBridge = function () {
          */
 
     }, {
-        key: "load",
+        key: 'load',
         value: function load() {
             var config = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
             if (!window.T || !window.T.Application) {
-                console.error("Terrific is not available in your environement, make sure " + "that the terrific.js is loaded before your React Application.");
+                console.error('Terrific is not available in your environement, make sure ' + 'that the terrific.js is loaded before your React Application.');
             }
 
             this.configure(config);
@@ -144,7 +144,7 @@ var TerrificBridge = function () {
                     return fn();
                 });
             } catch (e) {
-                console.error("Bootstrapping terrific application failed: " + (e.message || e || "Unknown Error"));
+                console.error('Bootstrapping terrific application failed: ' + (e.message || e || 'Unknown Error'));
             }
 
             this._processed = true;
@@ -160,7 +160,7 @@ var TerrificBridge = function () {
          */
 
     }, {
-        key: "reset",
+        key: 'reset',
         value: function reset() {
             this._config = {};
             this._debug = false;
@@ -182,7 +182,7 @@ var TerrificBridge = function () {
          */
 
     }, {
-        key: "getComponentById",
+        key: 'getComponentById',
         value: function getComponentById(id) {
             if (isNaN(id)) {
                 return void 0;
@@ -203,7 +203,7 @@ var TerrificBridge = function () {
          */
 
     }, {
-        key: "registerComponent",
+        key: 'registerComponent',
         value: function registerComponent(component) {
             var _this = this;
 
@@ -220,18 +220,18 @@ var TerrificBridge = function () {
                     return void 0;
                 }
 
-                var name = node.getAttribute("data-t-name");
-                var decoratorAnnotation = node.getAttribute("data-t-decorator");
-                var decorator = typeof decoratorAnnotation === "string" ? [decoratorAnnotation] : void 0;
+                var name = node.getAttribute('data-t-name');
+                var decoratorAnnotation = node.getAttribute('data-t-decorator');
+                var decorator = typeof decoratorAnnotation === 'string' ? [decoratorAnnotation] : void 0;
 
-                if (node.getAttribute("data-t-id")) {
+                if (node.getAttribute('data-t-id')) {
                     return void 0;
                 }
 
                 var tModule = _this._app.registerModule(node, name, decorator);
 
                 if (bridge._config.debug) {
-                    console.log("Registering tModule %s%s on node", name, decorator ? "#" + decorator[0] : "", node);
+                    console.log('Registering tModule %s%s on node', name, decorator ? '#' + decorator[0] : '', node);
                 }
 
                 if (tModule) {
@@ -252,11 +252,11 @@ var TerrificBridge = function () {
                             console.log("React is receiving action '%s' from terrific", selector);
                         }
 
-                        if (typeof fn === "function") {
+                        if (typeof fn === 'function') {
                             try {
                                 fn.apply(bridge, [].concat((0, _toConsumableArray3.default)(args)));
                             } catch (err) {
-                                console.error("TerrificBridge failed receiving action " + selector + ": " + err.message);
+                                console.error('TerrificBridge failed receiving action ' + selector + ': ' + err.message);
                             }
                         }
                     };
@@ -277,7 +277,7 @@ var TerrificBridge = function () {
          */
 
     }, {
-        key: "unregisterComponent",
+        key: 'unregisterComponent',
         value: function unregisterComponent(component) {
             var _this2 = this;
 
@@ -290,14 +290,14 @@ var TerrificBridge = function () {
                     return void 0;
                 }
 
-                var id = node.getAttribute("data-t-id");
+                var id = node.getAttribute('data-t-id');
                 if (!id || id === null) {
                     return void 0;
                 }
                 var tModule = _this2._app.getModuleById(id);
 
                 if (bridge._config.debug) {
-                    console.log("Unregistering terrific component #%s", id);
+                    console.log('Unregistering terrific component #%s', id);
                 }
 
                 try {
@@ -305,15 +305,15 @@ var TerrificBridge = function () {
                     tModule.send = function () {};
 
                     _this2._app.unregisterModules([id]);
-                    node.removeAttribute("data-t-id");
+                    node.removeAttribute('data-t-id');
 
                     if (bridge._config.debug) {
-                        console.log("Succesfully unregistered component #%s", id);
+                        console.log('Succesfully unregistered component #%s', id);
                     }
 
                     return true;
                 } catch (err) {
-                    console.error("Unregistering component #" + id + " failed: " + err.message);
+                    console.error('Unregistering component #' + id + ' failed: ' + err.message);
                 }
             };
 
@@ -329,7 +329,7 @@ var TerrificBridge = function () {
          */
 
     }, {
-        key: "action",
+        key: 'action',
         value: function action(component, _action) {
             for (var _len = arguments.length, args = Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
                 args[_key - 2] = arguments[_key];
@@ -341,13 +341,13 @@ var TerrificBridge = function () {
 
             var update = function update() {
                 var node = _reactDom2.default.findDOMNode(component);
-                var name = node.getAttribute("data-t-name");
-                var id = parseInt(node.getAttribute("data-t-id"), 10);
+                var name = node.getAttribute('data-t-name');
+                var id = parseInt(node.getAttribute('data-t-id'), 10);
 
-                _action = _action.replace(/\./g, "-");
-                _action = _action.replace(/\//g, "-");
+                _action = _action.replace(/\./g, '-');
+                _action = _action.replace(/\//g, '-');
 
-                if (_action.indexOf("-") > -1) {
+                if (_action.indexOf('-') > -1) {
                     _action = _action.replace(/-([a-z])/g, function (g) {
                         return g[1].toUpperCase();
                     });
@@ -357,11 +357,11 @@ var TerrificBridge = function () {
                     var tModule = _this3._app.getModuleById(id);
 
                     if (bridge._config.debug) {
-                        console.log("Send action %s to component %s#%d", _action, name, id);
+                        console.log('Send action %s to component %s#%d', _action, name, id);
                     }
 
                     if (tModule && tModule.actions) {
-                        if (typeof tModule.actions[_action] === "function") {
+                        if (typeof tModule.actions[_action] === 'function') {
                             tModule.actions[_action].apply(tModule, [].concat(args, [component]));
                             return true;
                         }
@@ -374,7 +374,7 @@ var TerrificBridge = function () {
             return this._app ? update() : this._queue.update.push(update);
         }
     }, {
-        key: "app",
+        key: 'app',
         get: function get() {
             return this._app;
         }
@@ -385,7 +385,7 @@ var TerrificBridge = function () {
          */
 
     }, {
-        key: "config",
+        key: 'config',
         get: function get() {
             return this._config;
         }
@@ -396,7 +396,7 @@ var TerrificBridge = function () {
          */
 
     }, {
-        key: "terrific",
+        key: 'terrific',
         get: function get() {
             return this._t || window.T || void 0;
         }
@@ -411,7 +411,7 @@ var TerrificBridge = function () {
 
 
 exports.TerrificBridge = TerrificBridge;
-TerrificBridgeInstance = new TerrificBridge(!(NODE_ENV === "production"));
+TerrificBridgeInstance = new TerrificBridge(!(NODE_ENV === 'production'));
 
 /**
  * Export the singleton as default tModule
