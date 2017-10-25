@@ -41,6 +41,9 @@ describe('TerrificBridge', () => {
                 new TerrificBridge();
             }).toThrow();
         });
+        it('should disable debug mode per default', () => {
+            expect(TerrificBridge.config.debug).toEqual(true);
+        });
     });
 
     describe('configuration', () => {
@@ -59,6 +62,7 @@ describe('TerrificBridge', () => {
             TerrificBridge.configure({ debug: true });
             TerrificBridge.load();
             expect(TerrificBridge.terrific).toBeTruthy();
+            expect(TerrificBridge.terrific).toEqual(T);
         });
         it.skip('should throw an error if no terrific was found', () => {
             window.T = {};

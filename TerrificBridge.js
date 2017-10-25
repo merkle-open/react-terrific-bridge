@@ -36,7 +36,9 @@ export const getGlobalApp = () => {
  */
 export class TerrificBridge {
     _queue = {};
-    _config = {};
+    _config = {
+        debug: false,
+    };
     _app = void 0;
     _processed = false;
     _t = void 0;
@@ -150,7 +152,9 @@ export class TerrificBridge {
      * flush all register hooks and data.
      */
     reset() {
-        this._config = {};
+        this._config = {
+            debug: false,
+        };
         this._debug = false;
         this._app = void 0;
         this._processed = false;

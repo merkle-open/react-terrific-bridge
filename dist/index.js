@@ -69,7 +69,9 @@ var TerrificBridge = function () {
         var debug = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
         (0, _classCallCheck3.default)(this, TerrificBridge);
         this._queue = {};
-        this._config = {};
+        this._config = {
+            debug: false
+        };
         this._app = void 0;
         this._processed = false;
         this._t = void 0;
@@ -177,7 +179,9 @@ var TerrificBridge = function () {
     }, {
         key: 'reset',
         value: function reset() {
-            this._config = {};
+            this._config = {
+                debug: false
+            };
             this._debug = false;
             this._app = void 0;
             this._processed = false;
