@@ -1,6 +1,6 @@
 {
     "name": "react-terrific-bridge",
-    "version": "1.2.8",
+    "version": "1.2.9",
     "main": "dist/index.js",
     "author": "Jan Biasi <biasijan@gmail.com>",
     "contributors": [
@@ -47,7 +47,8 @@
             "cross-env CI=true NODE_ENV=test jest --silent --verbose --noStackTrace && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
         "test:dev": "cross-env NODE_ENV=test jest --watchAll --logHeapUsage",
         "lint": "./node_modules/.bin/esw webpack.config.* src --color",
-        "lint:dev": "npm run lint -- --watch"
+        "lint:dev": "npm run lint -- --watch",
+        "publish": "yarn build && git add ./dist && git commit -m \"chore(build): Add build for publish process\""
     },
     "devDependencies": {
         "babel-cli": "~6.24.0",

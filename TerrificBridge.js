@@ -36,7 +36,9 @@ export const getGlobalApp = () => {
  */
 export class TerrificBridge {
     _queue = {};
-    _config = {};
+    _config = {
+        debug: false,
+    };
     _app = void 0;
     _processed = false;
     _t = void 0;
@@ -60,6 +62,18 @@ export class TerrificBridge {
         };
 
         return TerrificBridgeInstance;
+    }
+
+    /**
+     * Check if a component is mounted
+     * @param {React.Component} component 
+     */
+    isComponentMounted(component) {
+        try {
+            return ReactDOM.findDOMNode(component);
+        } catch (e) {
+            return false;
+        }
     }
 
     /**
@@ -123,7 +137,7 @@ export class TerrificBridge {
             this._queue.register.forEach(fn => fn());
             this._queue.unregister.forEach(fn => fn());
         } catch (e) {
-            console.error(`Bootstrapping terrific application failed: ${e.message || e || 'Unknown Error'}`);
+            throw new Error(`Bootstrapping terrific application failed: ${e.message || e || 'Unknown Error'}`);
         }
 
         this._processed = true;
@@ -138,7 +152,9 @@ export class TerrificBridge {
      * flush all register hooks and data.
      */
     reset() {
-        this._config = {};
+        this._config = {
+            debug: false,
+        };
         this._debug = false;
         this._app = void 0;
         this._processed = false;
@@ -178,6 +194,10 @@ export class TerrificBridge {
         const bridge = this;
 
         const register = () => {
+            if (!component) {
+                return void 0;
+            }
+
             const node = ReactDOM.findDOMNode(component);
 
             if (!node) {
@@ -243,6 +263,10 @@ export class TerrificBridge {
         const bridge = this;
 
         const unregister = () => {
+            if (!component) {
+                return void 0;
+            }
+
             const node = ReactDOM.findDOMNode(component);
 
             if (!node) {
@@ -250,9 +274,11 @@ export class TerrificBridge {
             }
 
             const id = node.getAttribute('data-t-id');
+
             if (!id || id === null) {
                 return void 0;
             }
+
             const tModule = this._app.getModuleById(id);
 
             if (bridge._config.debug) {
@@ -290,9 +316,25 @@ export class TerrificBridge {
         const bridge = this;
 
         const update = () => {
+            if (!component || !this.isComponentMounted(component)) {
+                if (bridge._config.debug) {
+                    console.warn('Cannot send action to unregistered component %s', component);
+                }
+                return void 0;
+            }
+
             const node = ReactDOM.findDOMNode(component);
+
+            if (!node) {
+                return void 0;
+            }
+
             const name = node.getAttribute('data-t-name');
             const id = parseInt(node.getAttribute('data-t-id'), 10);
+
+            if (!id || !name) {
+                return void 0;
+            }
 
             action = action.replace(/\./g, '-');
             action = action.replace(/\//g, '-');

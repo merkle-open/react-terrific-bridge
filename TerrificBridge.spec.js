@@ -3,6 +3,9 @@ import { configure, shallow, mount } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import sinon from 'sinon';
 
+// Timer setup
+jest.useFakeTimers();
+
 // polyfills
 import 'core-js/es6/map';
 import 'core-js/es6/set';
@@ -28,6 +31,7 @@ import TerrificBridge, {
 } from './';
 
 window.console.log = () => {};
+window.console.warn = () => {};
 
 describe('TerrificBridge', () => {
     describe('instanciation', () => {
@@ -38,13 +42,12 @@ describe('TerrificBridge', () => {
                 new TerrificBridge();
             }).toThrow();
         });
+        it('should disable debug mode per default', () => {
+            expect(TerrificBridge.config.debug).toEqual(true);
+        });
     });
 
     describe('configuration', () => {
-        it('should not fail if no configuration was passed', () => {
-            const configure = () => TerrificBridge.configure();
-            expect(configure).not.toThrow('Error');
-        });
         it('should be possible to disable debug mode manually', () => {
             TerrificBridge.configure({ debug: false });
             expect(TerrificBridge.config.debug).toEqual(false);
@@ -60,6 +63,7 @@ describe('TerrificBridge', () => {
             TerrificBridge.configure({ debug: true });
             TerrificBridge.load();
             expect(TerrificBridge.terrific).toBeTruthy();
+            expect(TerrificBridge.terrific).toEqual(T);
         });
         it.skip('should throw an error if no terrific was found', () => {
             window.T = {};
@@ -106,6 +110,13 @@ describe('TerrificBridge', () => {
 
     describe('components', () => {
         describe('registration', () => {
+            it('should not register or unregister invalid nodes', () => {
+                const registerInvalidNodes = () => TerrificBridge.registerComponent(void 0);
+                const unregisterInvalidNodes = () => TerrificBridge.unregisterComponent(void 0);
+
+                expect(registerInvalidNodes()).toEqual(void 0);
+                expect(unregisterInvalidNodes()).toEqual(void 0);
+            });
             it('should mount components successfully', () => {
                 TerrificBridge.reset();
 
@@ -384,6 +395,8 @@ describe('TerrificBridge', () => {
             });
 
             it.skip('should log unregistration errors from terrific components', () => {
+                // FIXME: How to test console logs?
+
                 TerrificBridge.reset();
                 TerrificBridge.configure({ debug: true });
 
@@ -462,6 +475,9 @@ describe('TerrificBridge', () => {
         });
 
         describe('communication', () => {
+            it('should not send actions to unmounted or invalid components', () => {
+                expect(TerrificBridge.action(void 0, 'test', {})).toEqual(void 0);
+            });
             it('should provide bidirectional communication for react & terrific', () => {
                 TerrificBridge.reset();
                 TerrificBridge.configure({ debug: true });
