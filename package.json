@@ -1,6 +1,6 @@
 {
     "name": "react-terrific-bridge",
-    "version": "1.2.9",
+    "version": "1.2.10",
     "main": "dist/index.js",
     "author": "Jan Biasi <biasijan@gmail.com>",
     "contributors": [
@@ -10,7 +10,8 @@
         }
     ],
     "license": "MIT",
-    "description": "A utility belt for using TerrificJS together with React. Provides module registration and unregistration as well as an action API for event bindings, also supporting Flow and TypeScript.",
+    "description":
+        "A utility belt for using TerrificJS together with React. Provides module registration and unregistration as well as an action API for event bindings, also supporting Flow and TypeScript.",
     "keywords": [
         "react",
         "terrific",
@@ -42,7 +43,8 @@
         "start:dev": "webpack-dev-server --hot --inline",
         "watch": "webpack -w -d",
         "build": "cross-env NODE_ENV=release babel ./TerrificBridge.js --out-file ./dist/index.js --ignore spec.js",
-        "test": "cross-env CI=true NODE_ENV=test jest --silent --verbose --noStackTrace && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
+        "test":
+            "cross-env CI=true NODE_ENV=test jest --silent --verbose --noStackTrace && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
         "test:dev": "cross-env NODE_ENV=test jest --watchAll --logHeapUsage",
         "lint": "./node_modules/.bin/esw webpack.config.* src --color",
         "lint:dev": "npm run lint -- --watch"
@@ -93,9 +95,7 @@
         "terrific": "~3.0.0"
     },
     "jest": {
-        "setupFiles": [
-            "raf/polyfill"
-        ],
+        "setupFiles": ["raf/polyfill"],
         "coverageDirectory": "./coverage/",
         "collectCoverage": true
     }
