@@ -318,9 +318,11 @@ var TerrificBridge = function () {
                 }
 
                 var id = node.getAttribute('data-t-id');
+
                 if (!id || id === null) {
                     return void 0;
                 }
+
                 var tModule = _this2._app.getModuleById(id);
 
                 if (bridge._config.debug) {
@@ -367,15 +369,25 @@ var TerrificBridge = function () {
             var bridge = this;
 
             var update = function update() {
-                if (!_this3.isComponentMounted(component)) {
+                if (!component || !_this3.isComponentMounted(component)) {
                     if (bridge._config.debug) {
                         console.warn('Cannot send action to unregistered component %s', component);
                     }
+                    return void 0;
                 }
 
                 var node = _reactDom2.default.findDOMNode(component);
+
+                if (!node) {
+                    return void 0;
+                }
+
                 var name = node.getAttribute('data-t-name');
                 var id = parseInt(node.getAttribute('data-t-id'), 10);
+
+                if (!id || !name) {
+                    return void 0;
+                }
 
                 _action = _action.replace(/\./g, '-');
                 _action = _action.replace(/\//g, '-');

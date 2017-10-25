@@ -31,6 +31,7 @@ import TerrificBridge, {
 } from './';
 
 window.console.log = () => {};
+window.console.warn = () => {};
 
 describe('TerrificBridge', () => {
     describe('instanciation', () => {
@@ -474,6 +475,9 @@ describe('TerrificBridge', () => {
         });
 
         describe('communication', () => {
+            it('should not send actions to unmounted or invalid components', () => {
+                expect(TerrificBridge.action(void 0, 'test', {})).toEqual(void 0);
+            });
             it('should provide bidirectional communication for react & terrific', () => {
                 TerrificBridge.reset();
                 TerrificBridge.configure({ debug: true });

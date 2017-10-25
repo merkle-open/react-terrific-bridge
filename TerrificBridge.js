@@ -274,9 +274,11 @@ export class TerrificBridge {
             }
 
             const id = node.getAttribute('data-t-id');
+
             if (!id || id === null) {
                 return void 0;
             }
+
             const tModule = this._app.getModuleById(id);
 
             if (bridge._config.debug) {
@@ -314,15 +316,25 @@ export class TerrificBridge {
         const bridge = this;
 
         const update = () => {
-            if (!this.isComponentMounted(component)) {
+            if (!component || !this.isComponentMounted(component)) {
                 if (bridge._config.debug) {
                     console.warn('Cannot send action to unregistered component %s', component);
                 }
+                return void 0;
             }
 
             const node = ReactDOM.findDOMNode(component);
+
+            if (!node) {
+                return void 0;
+            }
+
             const name = node.getAttribute('data-t-name');
             const id = parseInt(node.getAttribute('data-t-id'), 10);
+
+            if (!id || !name) {
+                return void 0;
+            }
 
             action = action.replace(/\./g, '-');
             action = action.replace(/\//g, '-');
