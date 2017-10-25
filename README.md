@@ -32,8 +32,13 @@ import TerrificBridgeInstance, {
 ```
 
 ### Dependencies
-* [react-dom@^15.1.0](https://www.npmjs.com/package/react-dom)
-* [react@^15.1.0](https://www.npmjs.com/package/react)
+* [react@~16.0.0](https://www.npmjs.com/package/react)
+* [react-dom@~16.0.0](https://www.npmjs.com/package/react-dom)
+
+####### Peer Dependencies
+* [react@>=15.0.0<17](https://www.npmjs.com/package/react)
+* [react-dom@>=15.0.0<17](https://www.npmjs.com/package/react-dom)
+* [terrific@~3.0.0](https://www.npmjs.com/package/terrific)
 
 ### Contents
 
