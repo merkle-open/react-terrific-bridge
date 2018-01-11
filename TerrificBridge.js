@@ -187,6 +187,12 @@ export class TerrificBridge {
             }
 
             const name = node.getAttribute('data-t-name');
+
+            if (!name || name.length === 0) {
+                // Invalid or missing data-t-name attribute value on node
+                return void 0;
+            }
+
             const decoratorAnnotation = node.getAttribute('data-t-decorator');
             const decorator = typeof decoratorAnnotation === 'string' ? [decoratorAnnotation] : void 0;
 
@@ -291,7 +297,17 @@ export class TerrificBridge {
 
         const update = () => {
             const node = ReactDOM.findDOMNode(component);
+
+            if (!node) {
+                return void 0;
+            }
+
             const name = node.getAttribute('data-t-name');
+
+            if (!name) {
+                return void 0;
+            }
+
             const id = parseInt(node.getAttribute('data-t-id'), 10);
 
             action = action.replace(/\./g, '-');
