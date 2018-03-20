@@ -62,7 +62,23 @@ describe('TerrificBridge', () => {
     });
 
     describe('customization', () => {
-        it('should be able to override the internal terrific reference', () => {
+        it('should be impossible to override the internal terrific reference without a valid terrific module', () => {
+            TerrificBridge.useCustomTerrific();
+            expect(TerrificBridge.terrific.someFakeTerrific).toBeFalsy();
+
+            TerrificBridge.useCustomTerrific(1293193);
+            expect(TerrificBridge.terrific.someFakeTerrific).toBeFalsy();
+
+            TerrificBridge.useCustomTerrific([1, 2, 3]);
+            expect(TerrificBridge.terrific.someFakeTerrific).toBeFalsy();
+
+            TerrificBridge.useCustomTerrific({
+                someFakeTerrific: true,
+            });
+            expect(TerrificBridge.terrific.someFakeTerrific).toBeFalsy();
+        });
+
+        it('should be possible to override the internal terrific reference', () => {
             TerrificBridge.useCustomTerrific(customTerrificModule);
 
             expect(TerrificBridge.terrific.isCustomTerrific).toBeTruthy();
