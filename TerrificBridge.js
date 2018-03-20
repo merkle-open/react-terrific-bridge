@@ -46,13 +46,13 @@ export class TerrificBridge {
      * @param  {boolean} [debug=false]      Set debug mode
      * @return {TerrificBridge}
      */
-    constructor(debug = false) {
-        if (!TerrificBridgeInstance) {
+    constructor(opts = {}) {
+        if (!TerrificBridgeInstance || opts.overrideSingletonInstance === true) {
             TerrificBridgeInstance = this;
         }
 
-        this._t = window.T;
-        this._config.debug = debug ? true : false;
+        this._t = opts.terrific || window.T;
+        this._config.debug = !!opts.debug;
         this._queue = {
             update: [],
             register: [],
@@ -83,7 +83,11 @@ export class TerrificBridge {
      * @return {Object}
      */
     get terrific() {
-        return this._t || window.T || void 0;
+        return this._t || window.T;
+    }
+
+    get verifyTerrificAvailability() {
+        return !!(this.terrific && this.terrific.Application);
     }
 
     /**
@@ -109,7 +113,7 @@ export class TerrificBridge {
      * @param  {Object} [config]        Optional configuration
      */
     load(config = {}) {
-        if (!window.T || !window.T.Application) {
+        if (!this.verifyTerrificAvailability) {
             console.error(
                 `Terrific is not available in your environement, make sure ` +
                     `that the terrific.js is loaded before your React Application.`
@@ -117,7 +121,7 @@ export class TerrificBridge {
         }
 
         this.configure(config);
-        this._app = new window.T.Application();
+        this._app = new this.terrific.Application();
 
         try {
             this._queue.register.forEach(fn => fn());
@@ -253,6 +257,7 @@ export class TerrificBridge {
             if (!id || id === null) {
                 return void 0;
             }
+
             const tModule = this._app.getModuleById(id);
 
             if (bridge._config.debug) {

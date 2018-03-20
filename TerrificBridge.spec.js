@@ -29,6 +29,10 @@ import TerrificBridge, {
 
 window.console.log = () => {};
 
+const customTerrificModule = Object.assign(T, {
+    isCustomTerrific: true,
+});
+
 describe('TerrificBridge', () => {
     describe('instanciation', () => {
         it.skip('should throw an error if terrific is not available inside the window', () => {});
@@ -37,6 +41,16 @@ describe('TerrificBridge', () => {
             expect(() => {
                 new TerrificBridge();
             }).toThrow();
+        });
+
+        it('should take a custom terrific module', () => {
+            const customBridge = new TerrificBridgeBlueprint({
+                terrific: customTerrificModule,
+                overrideSingletonInstance: true,
+            });
+
+            expect(customBridge.terrific.isCustomTerrific).toBeTruthy();
+            expect(customBridge.verifyTerrificAvailability).toBeTruthy();
         });
     });
 
