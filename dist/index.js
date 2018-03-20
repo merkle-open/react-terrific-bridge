@@ -96,13 +96,26 @@ var TerrificBridge = function () {
 
 
     (0, _createClass3.default)(TerrificBridge, [{
-        key: 'configure',
+        key: 'useCustomTerrific',
 
+
+        /**
+         * Override internal terrific reference
+         * @param {Terrific} terrificModule
+         */
+        value: function useCustomTerrific(terrificModule) {
+            if (terrificModule && terrificModule.Application) {
+                this._t = terrificModule;
+            }
+        }
 
         /**
          * Configure the TerrificBridge
          * @param  {Object} [config={}]     Configuration factory
          */
+
+    }, {
+        key: 'configure',
         value: function configure() {
             var config = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 

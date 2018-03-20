@@ -29,7 +29,7 @@ import TerrificBridge, {
 
 window.console.log = () => {};
 
-const customTerrificModule = Object.assign(T, {
+const customTerrificModule = Object.assign({}, T, {
     isCustomTerrific: true,
 });
 
@@ -51,6 +51,22 @@ describe('TerrificBridge', () => {
 
             expect(customBridge.terrific.isCustomTerrific).toBeTruthy();
             expect(customBridge.verifyTerrificAvailability).toBeTruthy();
+
+            // reset terrific-bridge singleton
+            new TerrificBridgeBlueprint({
+                overrideSingletonInstance: true,
+            });
+
+            expect(TerrificBridge.terrific.isCustomTerrific).toBeFalsy();
+        });
+    });
+
+    describe('customization', () => {
+        it('should be able to override the internal terrific reference', () => {
+            TerrificBridge.useCustomTerrific(customTerrificModule);
+
+            expect(TerrificBridge.terrific.isCustomTerrific).toBeTruthy();
+            expect(TerrificBridge.verifyTerrificAvailability).toBeTruthy();
         });
     });
 

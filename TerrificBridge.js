@@ -91,6 +91,16 @@ export class TerrificBridge {
     }
 
     /**
+     * Override internal terrific reference
+     * @param {Terrific} terrificModule
+     */
+    useCustomTerrific(terrificModule) {
+        if (terrificModule && terrificModule.Application) {
+            this._t = terrificModule;
+        }
+    }
+
+    /**
      * Configure the TerrificBridge
      * @param  {Object} [config={}]     Configuration factory
      */
