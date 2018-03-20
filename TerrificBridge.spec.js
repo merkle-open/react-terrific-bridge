@@ -29,6 +29,10 @@ import TerrificBridge, {
 
 window.console.log = () => {};
 
+const customTerrificModule = Object.assign({}, T, {
+    isCustomTerrific: true,
+});
+
 describe('TerrificBridge', () => {
     describe('instanciation', () => {
         it.skip('should throw an error if terrific is not available inside the window', () => {});
@@ -37,6 +41,48 @@ describe('TerrificBridge', () => {
             expect(() => {
                 new TerrificBridge();
             }).toThrow();
+        });
+
+        it('should take a custom terrific module', () => {
+            const customBridge = new TerrificBridgeBlueprint({
+                terrific: customTerrificModule,
+                overrideSingletonInstance: true,
+            });
+
+            expect(customBridge.terrific.isCustomTerrific).toBeTruthy();
+            expect(customBridge.verifyTerrificAvailability).toBeTruthy();
+
+            // reset terrific-bridge singleton
+            new TerrificBridgeBlueprint({
+                overrideSingletonInstance: true,
+            });
+
+            expect(TerrificBridge.terrific.isCustomTerrific).toBeFalsy();
+        });
+    });
+
+    describe('customization', () => {
+        it('should be impossible to override the internal terrific reference without a valid terrific module', () => {
+            TerrificBridge.useCustomTerrific();
+            expect(TerrificBridge.terrific.someFakeTerrific).toBeFalsy();
+
+            TerrificBridge.useCustomTerrific(1293193);
+            expect(TerrificBridge.terrific.someFakeTerrific).toBeFalsy();
+
+            TerrificBridge.useCustomTerrific([1, 2, 3]);
+            expect(TerrificBridge.terrific.someFakeTerrific).toBeFalsy();
+
+            TerrificBridge.useCustomTerrific({
+                someFakeTerrific: true,
+            });
+            expect(TerrificBridge.terrific.someFakeTerrific).toBeFalsy();
+        });
+
+        it('should be possible to override the internal terrific reference', () => {
+            TerrificBridge.useCustomTerrific(customTerrificModule);
+
+            expect(TerrificBridge.terrific.isCustomTerrific).toBeTruthy();
+            expect(TerrificBridge.verifyTerrificAvailability).toBeTruthy();
         });
     });
 

@@ -66,7 +66,7 @@ var TerrificBridge = function () {
      * @return {TerrificBridge}
      */
     function TerrificBridge() {
-        var debug = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+        var opts = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
         (0, _classCallCheck3.default)(this, TerrificBridge);
         this._queue = {};
         this._config = {};
@@ -74,12 +74,12 @@ var TerrificBridge = function () {
         this._processed = false;
         this._t = void 0;
 
-        if (!TerrificBridgeInstance) {
+        if (!TerrificBridgeInstance || opts.overrideSingletonInstance === true) {
             TerrificBridgeInstance = this;
         }
 
-        this._t = window.T;
-        this._config.debug = debug ? true : false;
+        this._t = opts.terrific || window.T;
+        this._config.debug = !!opts.debug;
         this._queue = {
             update: [],
             register: [],
@@ -96,13 +96,26 @@ var TerrificBridge = function () {
 
 
     (0, _createClass3.default)(TerrificBridge, [{
-        key: 'configure',
+        key: 'useCustomTerrific',
 
+
+        /**
+         * Override internal terrific reference
+         * @param {Terrific} terrificModule
+         */
+        value: function useCustomTerrific(terrificModule) {
+            if (terrificModule && terrificModule.Application) {
+                this._t = terrificModule;
+            }
+        }
 
         /**
          * Configure the TerrificBridge
          * @param  {Object} [config={}]     Configuration factory
          */
+
+    }, {
+        key: 'configure',
         value: function configure() {
             var config = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
@@ -129,12 +142,12 @@ var TerrificBridge = function () {
         value: function load() {
             var config = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
-            if (!window.T || !window.T.Application) {
+            if (!this.verifyTerrificAvailability) {
                 console.error('Terrific is not available in your environement, make sure ' + 'that the terrific.js is loaded before your React Application.');
             }
 
             this.configure(config);
-            this._app = new window.T.Application();
+            this._app = new this.terrific.Application();
 
             try {
                 this._queue.register.forEach(function (fn) {
@@ -294,6 +307,7 @@ var TerrificBridge = function () {
                 if (!id || id === null) {
                     return void 0;
                 }
+
                 var tModule = _this2._app.getModuleById(id);
 
                 if (bridge._config.debug) {
@@ -398,7 +412,12 @@ var TerrificBridge = function () {
     }, {
         key: 'terrific',
         get: function get() {
-            return this._t || window.T || void 0;
+            return this._t || window.T;
+        }
+    }, {
+        key: 'verifyTerrificAvailability',
+        get: function get() {
+            return !!(this.terrific && this.terrific.Application);
         }
     }]);
     return TerrificBridge;
