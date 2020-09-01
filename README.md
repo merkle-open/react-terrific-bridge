@@ -28,13 +28,13 @@ import TerrificBridgeInstance, { TerrificBridge, TerrificBridgeGlobalAppId, getG
 
 ### Dependencies
 
-*   [react@~16.0.0](https://www.npmjs.com/package/react)
-*   [react-dom@~16.0.0](https://www.npmjs.com/package/react-dom)
+*   [react@~16.3.0](https://www.npmjs.com/package/react)
+*   [react-dom@~16.3.0](https://www.npmjs.com/package/react-dom)
 
 ###### Peer Dependencies
 
-*   [react@>=15.0.0<17](https://www.npmjs.com/package/react)
-*   [react-dom@>=15.0.0<17](https://www.npmjs.com/package/react-dom)
+*   [react@>=16.3.0](https://www.npmjs.com/package/react)
+*   [react-dom@>=16.3.0](https://www.npmjs.com/package/react-dom)
 *   [terrific@~3.0.0](https://www.npmjs.com/package/terrific)
 
 ### Contents
@@ -98,19 +98,25 @@ import React, { Component } from 'react';
 import TerrificBridge from 'helper/terrific';
 
 export default class Slider extends Component {
+
+     constructor(props) {
+        super(props);
+        this.componentRef = React.createRef();
+    }
+
     componentDidMount() {
-        TerrificBridge.registerComponent(this);
+        TerrificBridge.registerComponent(this.componentRef.current);
     }
 
     componentWillUnmount() {
-        TerrificBridge.unregisterComponent(this);
+        TerrificBridge.unregisterComponent(this.componentRef.current);
     }
 
     render() {
         const { modifier, slides } = this.props;
 
         return (
-            <ul className={'m-slider' + (modifier ? 'm-slider--' + modifier : '')} data-t-name="Slider">
+            <ul  ref={this.componentRef} className={'m-slider' + (modifier ? 'm-slider--' + modifier : '')} data-t-name="Slider">
                 {slides &&
                     slides.map((slide, index) => {
                         return (
@@ -138,22 +144,28 @@ import React, { Component } from 'react';
 import TerrificBridge from 'helper/terrific';
 
 export default class Slider extends Component {
+
+    constructor(props) {
+        super(props);
+        this.componentRef = React.createRef();
+    }
+
     componentDidMount() {
         // Trigger via T.Module.Slider.send("shouldUpdate");
-        TerrificBridge.registerComponent(this, {
+        TerrificBridge.registerComponent(this.componentRef.current, {
             shouldUpdate: this.forceUpdate,
         });
     }
 
     componentWillUnmount() {
-        TerrificBridge.unregisterComponent(this);
+        TerrificBridge.unregisterComponent(this.componentRef.current);
     }
 
     render() {
         const { modifier, slides } = this.props;
 
         return (
-            <ul className={'m-slider' + (modifier ? 'm-slider--' + modifier : '')} data-t-name="Slider">
+            <ul ref={this.componentRef} className={'m-slider' + (modifier ? 'm-slider--' + modifier : '')} data-t-name="Slider">
                 {slides &&
                     slides.map((slide, index) => {
                         return (
@@ -180,20 +192,26 @@ import React, { Component } from 'react';
 import TerrificBridge from 'helper/terrific';
 
 export default class Slider extends Component {
+
+    constructor(props) {
+        super(props);
+        this.componentRef = React.createRef();
+    }
+
     componentDidMount() {
-        TerrificBridge.registerComponent(this, {
+        TerrificBridge.registerComponent(this.componentRef.current, {
             update: this.forceUpdate,
         });
     }
 
     componentWillUnmount() {
-        TerrificBridge.unregisterComponent(this);
+        TerrificBridge.unregisterComponent(this.componentRef.current);
     }
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.forceUpdate && nextProps.forceUpdateId) {
             // T.Module.Slider.actions.update(nextProps.forceUpdateId);
-            TerrificBridge.action(this, 'update', nextProps.forceUpdateId);
+            TerrificBridge.action(this.componentRef.current, 'update', nextProps.forceUpdateId);
         }
     }
 
@@ -201,7 +219,7 @@ export default class Slider extends Component {
         const { modifier, slides } = this.props;
 
         return (
-            <ul className={'m-slider' + (modifier ? 'm-slider--' + modifier : '')} data-t-name="Slider">
+            <ul ref={this.componentRef} className={'m-slider' + (modifier ? 'm-slider--' + modifier : '')} data-t-name="Slider">
                 {slides &&
                     slides.map((slide, index) => {
                         return (
@@ -227,19 +245,24 @@ import React, { Component } from 'react';
 import TerrificBridge from 'helper/terrific';
 
 export default class Slider extends Component {
+
+    constructor(props) {
+        super(props);
+        this.componentRef = React.createRef();
+    }
     componentDidMount() {
-        TerrificBridge.registerComponent(this);
+        TerrificBridge.registerComponent(this.componentRef.current);
     }
 
     componentWillUnmount() {
-        TerrificBridge.unregisterComponent(this);
+        TerrificBridge.unregisterComponent(this.componentRef.current);
     }
 
     render() {
         const { modifier, slides } = this.props;
 
         return (
-            <ul className={'m-slider' + (modifier ? 'm-slider--' + modifier : '')} data-t-name="Slider">
+            <ul ref={this.componentRef} className={'m-slider' + (modifier ? 'm-slider--' + modifier : '')} data-t-name="Slider">
                 {slides &&
                     slides.map((slide, index) => {
                         return (
@@ -316,16 +339,16 @@ TerrificBridge.reset(): void
 
 | #   | Argument Type            | Required |
 | --- | ------------------------ | -------- |
-| 1   | ReactComponent<_, _, \*> | true     |
+| 1   | DOM Node | true     |
 | 2   | BindingFactory {}        | false    |
 
 ```js
-TerrificBridge.registerComponent(component: Component<*, *, *>, factory: BindingFactory): void
+TerrificBridge.registerComponent(node, factory: BindingFactory): void
 ```
 
-##### 1 ReactComponent
+##### 1 DOM Node
 
-Reference for the React Component
+Reference a DOM Node
 
 ##### 2 BindingFactory
 
@@ -357,31 +380,31 @@ The ID of a component (e.g. 198).
 
 | #   | Argument Type            | Required |
 | --- | ------------------------ | -------- |
-| 1   | ReactComponent<_, _, \*> | true     |
+| 1   | DOM Node | true     |
 
 ```js
-TerrificBridge.unregisterComponent(component: Component<*, *, *>): void
+TerrificBridge.unregisterComponent(node): void
 ```
 
-##### 01 ReactComponent
+##### 01 DOM Node
 
-Reference for the React Component
+Reference for the React Component DOM Node
 
 ### action
 
 | #   | Argument Type            | Required |
 | --- | ------------------------ | -------- |
-| 1   | ReactComponent<_, _, \*> | true     |
+| 1   | DOM Node | true     |
 | 2   | Action: string           | true     |
 | N   | Arguments: ...any        | false    |
 
 ```js
-TerrificBridge.action(component: Component<*, *, *>, action: string, ...args: any): void
+TerrificBridge.action(node, action: string, ...args: any): void
 ```
 
-##### 1 ReactComponent
+##### 1 DOM Node
 
-Reference for the React Component
+Reference for the React Component DOM Node
 
 ##### 2 Action
 
