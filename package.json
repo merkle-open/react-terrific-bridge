@@ -42,6 +42,7 @@
   "scripts": {
     "precommit": "npm-run-all test lint",
     "release": "./node_modules/.bin/release-it",
+    "release:dry-run": "./node_modules/.bin/release-it --dry-run",
     "start": "npm-run-all --parallel start:dev lint:dev",
     "start:dev": "webpack-dev-server --hot --inline",
     "watch": "webpack -w -d",
