@@ -134,12 +134,17 @@ describe('TerrificBridge', () => {
         });
 
         class CanRegister extends Component {
+            constructor(props) {
+                super(props);
+                this.componentRef = React.createRef();
+            }
+
             componentWillUnmount() {
-                TerrificBridge.unregisterComponent(this);
+                TerrificBridge.unregisterComponent(this.componentRef.current);
             }
 
             render() {
-                return <div id="component" data-t-name="CanRegister" />;
+                return <div id="component" data-t-name="CanRegister"  ref={this.componentRef} />;
             }
         }
 
@@ -247,6 +252,7 @@ describe('TerrificBridge', () => {
                 expect(mountedComponenet).toHaveLength(1);
                 expect(registeredFeuComponent).toBeFalsy();
             });
+
             it('should register terrific components successfully', () => {
                 TerrificBridge.reset();
                 TerrificBridge.configure({ debug: true });
@@ -263,12 +269,18 @@ describe('TerrificBridge', () => {
                 });
 
                 class CanRegister extends Component {
+
+                    constructor(props) {
+                        super(props);
+                        this.componentRef = React.createRef();
+                    }
+
                     componentDidMount() {
-                        registeredFeuComponent = TerrificBridge.registerComponent(this);
+                        registeredFeuComponent = TerrificBridge.registerComponent(this.componentRef.current);
                     }
 
                     render() {
-                        return <div id="component" data-t-name="CanRegister" />;
+                        return <div id="component" data-t-name="CanRegister" ref={this.componentRef} />;
                     }
                 }
 
@@ -318,12 +330,18 @@ describe('TerrificBridge', () => {
                 });
 
                 class CanRegister extends Component {
+
+                    constructor(props) {
+                        super(props);
+                        this.componentRef = React.createRef();
+                    }
+
                     componentDidMount() {
-                        registeredFeuComponent = TerrificBridge.registerComponent(this);
+                        registeredFeuComponent = TerrificBridge.registerComponent(this.componentRef.current);
                     }
 
                     render() {
-                        return <div id="component" data-t-name="CanRegister" data-t-decorator="Decorator" />;
+                        return <div id="component" data-t-name="CanRegister" data-t-decorator="Decorator"  ref={this.componentRef} />;
                     }
                 }
 
@@ -409,16 +427,22 @@ describe('TerrificBridge', () => {
                 });
 
                 class CanRegister extends Component {
+
+                    constructor(props) {
+                        super(props);
+                        this.componentRef = React.createRef();
+                    }
+
                     componentDidMount() {
-                        TerrificBridge.registerComponent(this);
+                        TerrificBridge.registerComponent(this.componentRef.current);
                     }
 
                     componentWillUnmount() {
-                        TerrificBridge.unregisterComponent(this);
+                        TerrificBridge.unregisterComponent(this.componentRef.current);
                     }
 
                     render() {
-                        return <div id="component" data-t-name="CanRegister" />;
+                        return <div id="component" data-t-name="CanRegister"  ref={this.componentRef} />;
                     }
                 }
 
@@ -484,13 +508,19 @@ describe('TerrificBridge', () => {
                 });
 
                 class CanRegister extends Component {
+                    
+                    constructor(props) {
+                        super(props);
+                        this.componentRef = React.createRef();
+                    }
+
                     componentDidMount() {
-                        TerrificBridge.registerComponent(this);
+                        TerrificBridge.registerComponent(this.componentRef.current);
                     }
 
                     render() {
                         return (
-                            <div id="component" data-t-name="CanRegister">
+                            <div id="component" data-t-name="CanRegister" ref={this.componentRef}>
                                 <button className="bound-click">Click me</button>
                             </div>
                         );
@@ -526,17 +556,23 @@ describe('TerrificBridge', () => {
                 });
 
                 class CanRegister extends Component {
+                    
+                    constructor(props) {
+                        super(props);
+                        this.componentRef = React.createRef();
+                    }
+
                     componentDidMount() {
-                        TerrificBridge.registerComponent(this, {
+                        TerrificBridge.registerComponent(this.componentRef.current, {
                             reactConnectionHandler,
                         });
 
-                        TerrificBridge.action(this, 'terrificConnectionHandler');
+                        TerrificBridge.action(this.componentRef.current, 'terrificConnectionHandler');
                     }
 
                     render() {
                         return (
-                            <div id="component" data-t-name="CanRegister">
+                            <div id="component" data-t-name="CanRegister" ref={this.componentRef}>
                                 <button className="bound-click">Click me</button>
                             </div>
                         );
@@ -581,16 +617,22 @@ describe('TerrificBridge', () => {
                 });
 
                 class CanRegister extends Component {
+
+                    constructor(props) {
+                        super(props);
+                        this.componentRef = React.createRef();
+                    }
+
                     componentDidMount() {
-                        TerrificBridge.registerComponent(this);
+                        TerrificBridge.registerComponent(this.componentRef.current);
                     }
 
                     remoteTriggerError() {
-                        TerrificBridge.action(this, 'shouldThrowError');
+                        TerrificBridge.action(this.componentRef.current, 'shouldThrowError');
                     }
 
                     render() {
-                        return <div id="component" data-t-name="CanRegister" />;
+                        return <div id="component" data-t-name="CanRegister"  ref={this.componentRef} />;
                     }
                 }
 
@@ -628,13 +670,19 @@ describe('TerrificBridge', () => {
                 });
 
                 class CanRegister extends Component {
+
+                    constructor(props) {
+                        super(props);
+                        this.componentRef = React.createRef();
+                    }
+
                     componentDidMount() {
-                        registeredFeuComponent = TerrificBridge.registerComponent(this);
-                        TerrificBridge.action(this, 'testAction', 10);
+                        registeredFeuComponent = TerrificBridge.registerComponent(this.componentRef.current);
+                        TerrificBridge.action(this.componentRef.current, 'testAction', 10);
                     }
 
                     render() {
-                        return <div id="component" data-t-name="CanRegister" data-t-decorator="Decorator" />;
+                        return <div id="component" data-t-name="CanRegister" data-t-decorator="Decorator" ref={this.componentRef} />;
                     }
                 }
 

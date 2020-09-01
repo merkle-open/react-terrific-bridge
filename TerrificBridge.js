@@ -1,5 +1,3 @@
-import ReactDOM from 'react-dom';
-
 /**
  * Singleton container
  * @type {TerrificBridge|null}
@@ -192,7 +190,7 @@ export class TerrificBridge {
         const bridge = this;
 
         const register = () => {
-            const node = ReactDOM.findDOMNode(component);
+            const node = component;
 
             if (!node) {
                 // No valid node was found or React component
@@ -257,7 +255,7 @@ export class TerrificBridge {
         const bridge = this;
 
         const unregister = () => {
-            const node = ReactDOM.findDOMNode(component);
+            const node = component;
 
             if (!node) {
                 return void 0;
@@ -305,7 +303,7 @@ export class TerrificBridge {
         const bridge = this;
 
         const update = () => {
-            const node = ReactDOM.findDOMNode(component);
+            const node = component;
             const name = node.getAttribute('data-t-name');
             const id = parseInt(node.getAttribute('data-t-id'), 10);
 

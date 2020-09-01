@@ -17,10 +17,6 @@ var _createClass2 = require('babel-runtime/helpers/createClass');
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
-var _reactDom = require('react-dom');
-
-var _reactDom2 = _interopRequireDefault(_reactDom);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
@@ -225,7 +221,7 @@ var TerrificBridge = function () {
             var bridge = this;
 
             var register = function register() {
-                var node = _reactDom2.default.findDOMNode(component);
+                var node = component;
 
                 if (!node) {
                     // No valid node was found or React component
@@ -297,7 +293,7 @@ var TerrificBridge = function () {
             var bridge = this;
 
             var unregister = function unregister() {
-                var node = _reactDom2.default.findDOMNode(component);
+                var node = component;
 
                 if (!node) {
                     return void 0;
@@ -354,7 +350,7 @@ var TerrificBridge = function () {
             var bridge = this;
 
             var update = function update() {
-                var node = _reactDom2.default.findDOMNode(component);
+                var node = component;
                 var name = node.getAttribute('data-t-name');
                 var id = parseInt(node.getAttribute('data-t-id'), 10);
 

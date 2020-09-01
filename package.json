@@ -1,12 +1,16 @@
 {
   "name": "react-terrific-bridge",
-  "version": "1.2.12",
+  "version": "2.0.0",
   "main": "dist/index.js",
   "author": "Jan Biasi <biasijan@gmail.com>",
   "contributors": [
     {
       "name": "Simon Mollweide",
       "email": "simon.mollweide@namics.com"
+    },
+    {
+      "name": "Dominic Modalek",
+      "email": "dominic.modalek@namics.com"
     }
   ],
   "license": "MIT",
@@ -76,9 +80,9 @@
     "jquery": "~3.2.1",
     "npm-run-all": "~4.0.0",
     "raf": "^3.4.0",
-    "react": "~16.0.0",
-    "react-dom": "~16.0.0",
-    "react-test-renderer": "~16.0.0",
+    "react": "~16.3.0",
+    "react-dom": "~16.3.0",
+    "react-test-renderer": "~16.3.0",
     "regenerator-runtime": "~0.10.0",
     "release-it": "10.3.1",
     "simple-assign": "~0.1.0",
@@ -89,8 +93,8 @@
     "webpack-dev-server": "3.2.1"
   },
   "peerDependencies": {
-    "react": ">= 15.0.0 < 17",
-    "react-dom": ">= 15.0.0 < 17",
+    "react": ">= 16.3.0",
+    "react-dom": ">= 16.3.0",
     "terrific": "~3.0.0"
   },
   "jest": {
